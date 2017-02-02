@@ -30,14 +30,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Registro }
-     * 
-     */
-    public Registro createRegistro() {
-        return new Registro();
-    }
-
-    /**
      * Create an instance of {@link GetCertificadoElement }
      * 
      */
@@ -51,6 +43,14 @@ public class ObjectFactory {
      */
     public GetCertificadoResponseElement createGetCertificadoResponseElement() {
         return new GetCertificadoResponseElement();
+    }
+
+    /**
+     * Create an instance of {@link Registro }
+     * 
+     */
+    public Registro createRegistro() {
+        return new Registro();
     }
 
 }
