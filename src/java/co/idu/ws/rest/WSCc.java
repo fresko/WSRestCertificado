@@ -5,7 +5,12 @@
  */
 package co.idu.ws.rest;
 
+import co.idu.cliente.soap.GetCertificadoElement;
+import co.idu.cliente.soap.GetCertificadoResponseElement;
 import co.idu.modelo.Opciones;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -18,6 +23,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
+
+
 
 /**
  * REST Web Service
@@ -61,25 +68,52 @@ public class WSCc {
     @Path("/obtenerCertificado")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response getCertificados(Opciones op) throws Exception{
+         System.out.print("Testing..."  );
       ObjectMapper mapper;
        String respuestaJSON = "faild";
       mapper = new ObjectMapper();
         
        try {
-              
               respuestaJSON = mapper.writeValueAsString(op);
-              return Response.status(Response.Status.OK).entity(respuestaJSON).build();
-           /* return Response.status(Response.Status.OK)
-                           .header("uuid", solicitud.getUuid())
-                           .header("usuario", credencial.getUsuario())
-                           .header("aplicacion", credencial.getAplicacion())
-                           .header("accessToken", solicitud.getAccessToken())
-                           .entity(respuestaJSON).build(); */
+              
+              //llamado a ws soap de catastro que envia certificado pdf
+              
+                GetCertificadoResponseElement resultado = new GetCertificadoResponseElement();
+                GetCertificadoElement parameters = new GetCertificadoElement();
+                parameters.setCedulaCatastral("");
+                parameters.setChip("AAA0179HKBR");
+                parameters.setClave("8999990816");
+                parameters.setDireccion("");
+                parameters.setCorreousuario("wsidu@idu.gov.co");
+                parameters.setIpRemoto("200.93.146.198");
+       
+                
+                resultado = this.getCertificado(parameters);
+                
+               generateFile(resultado); 
+            return Response.status(Response.Status.OK).entity(respuestaJSON).build();
+          
             
-        } catch (Exception exc){
+        } catch (IOException exc){
             exc.printStackTrace();
             op.setOpciones(respuestaJSON);
             return Response.status(Response.Status.BAD_REQUEST).entity(op).build();
         }
     } 
+
+    private static GetCertificadoResponseElement getCertificado(co.idu.cliente.soap.GetCertificadoElement parameters) {
+        co.idu.cliente.soap.WSCertificadoCatastralCL_Service service = new co.idu.cliente.soap.WSCertificadoCatastralCL_Service();
+        co.idu.cliente.soap.WSCertificadoCatastralCL port = service.getWSCertificadoCatastralCLSoapHttpPort();
+        return port.getCertificado(parameters);
+    }
+    
+    public void generateFile(GetCertificadoResponseElement r) throws FileNotFoundException, IOException{
+       
+        System.out.print("Testing..." + r.getResult().getPdfCertificado().toString() );
+        FileOutputStream fos = new FileOutputStream("E:\\SONY\\Datos_JCPH\\IDU\\workspace\\cc.pdf");
+        fos.write(r.getResult().getPdfCertificado());
+        fos.close();
+       
+       
+    }
 }

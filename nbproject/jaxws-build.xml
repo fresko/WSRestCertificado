@@ -42,5 +42,37 @@
         <delete dir="${build.generated.sources.dir}/jax-ws/co/idu/cliente/soap"/>
         <delete dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-WSCertificadoCatastralCLSoapHttpPort"/>
+    <target name="wsimport-client-WSCertificadoCatastralCLSoapHttpPort_1" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1" destdir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort_1/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort?WSDL" xnocompile="true" package="co.idu.ws.soap">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort_1/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-WSCertificadoCatastralCLSoapHttpPort_1" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/co/idu/ws/soap"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_1"/>
+    </target>
+    <target name="wsimport-client-WSCertificadoCatastralCLSoapHttpPort_2" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2" destdir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort_2/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort?WSDL" xnocompile="true" package="co.idu.ws.soap">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort_2/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-WSCertificadoCatastralCLSoapHttpPort_2" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/co/idu/ws/soap"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/WSCertificadoCatastralCLSoapHttpPort_2"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-WSCertificadoCatastralCLSoapHttpPort, wsimport-client-WSCertificadoCatastralCLSoapHttpPort_1, wsimport-client-WSCertificadoCatastralCLSoapHttpPort_2"/>
 </project>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-    <system systemId="http://servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort?WSDL" uri="src/conf/xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl"/>
+    <system systemId="http://servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort?WSDL" uri="src/conf/xml-resources/web-service-references/WSCertificadoCatastralCLSoapHttpPort_2/wsdl/servicios.catastrobogota.gov.co/WSCertificadoCatastroCL/WSCertificadoCatastralCLSoapHttpPort.wsdl"/>
 </catalog>
