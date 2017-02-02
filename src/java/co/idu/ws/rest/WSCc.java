@@ -8,6 +8,7 @@ package co.idu.ws.rest;
 import co.idu.cliente.soap.GetCertificadoElement;
 import co.idu.cliente.soap.GetCertificadoResponseElement;
 import co.idu.modelo.Opciones;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -34,6 +36,8 @@ public class WSCc {
 
     @Context
     private UriInfo context;
+    String FILE_PATH = "D:\\SOPORTES\\Certificado\\certificadoc.pdf";
+     FileOutputStream fos;
 
     /**
      * Creates a new instance of WSCc
@@ -45,12 +49,23 @@ public class WSCc {
      * Retrieves representation of an instance of co.idu.ws.rest.WSCc
      *
      * @return an instance of java.lang.String
-     */
+     
     @GET
     @Produces("application/json")
     public String getJson() {
         //TODO return proper representation object
         throw new UnsupportedOperationException();
+    }*/
+    
+    @GET
+    @Path("/getPdf")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getFile() {
+        File file = new File(FILE_PATH);
+        ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition", "attachment; filename=newfile.pdf");
+        return response.build();
+
     }
 
     /**
@@ -109,6 +124,7 @@ public class WSCc {
             generateFile(resultado);
             return Response.status(Response.Status.OK).entity(respuestaJSON).build();
             
+            
           } catch (IOException exc) {
                 exc.printStackTrace();
                 op.setOpcion(respuestaJSON);
@@ -127,9 +143,11 @@ public class WSCc {
     public void generateFile(GetCertificadoResponseElement r) throws FileNotFoundException, IOException {
 
         System.out.print("Testing..." + r.getResult().getPdfCertificado().toString());
-        FileOutputStream fos = new FileOutputStream("D:\\SOPORTES\\Certificado\\certificadoc.pdf");
+        fos = new FileOutputStream(FILE_PATH);
         fos.write(r.getResult().getPdfCertificado());
         fos.close();
 
     }
+    
+    
 }
