@@ -8,6 +8,7 @@ package co.idu.ws.rest;
 import co.idu.cliente.soap.GetCertificadoElement;
 import co.idu.cliente.soap.GetCertificadoResponseElement;
 import co.idu.modelo.Opciones;
+import co.idu.modelo.Respuesta;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -35,9 +36,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class WSCc {
 
     @Context
-    private UriInfo context;
-    String FILE_PATH = "D:\\SOPORTES\\Certificado\\certificadoc.pdf";
-     FileOutputStream fos;
+    private UriInfo context; 
+   // String FILE_PATH = "/home/weblogic/Oracle/Middleware/Oracle_Home/user_projects/domains/base_domain/servers/AdminServer/upload/certificadoc.pdf";
+    String FILE_PATH = "D:\\SOPORTES\\Certificado\\certificadoc.pdf";       
+    FileOutputStream fos;
+    Respuesta respuesta = new Respuesta();
 
     /**
      * Creates a new instance of WSCc
@@ -82,10 +85,11 @@ public class WSCc {
     @POST
     @Path("/obtenerCertificado")
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_OCTET_STREAM,MediaType.APPLICATION_JSON})
     public Response getCertificados(Opciones op) throws Exception {
-        System.out.print("Testing...");
+      
         ObjectMapper mapper;
-        String respuestaJSON = "faild";
+        String respuestaJSON ="{'error':'faild'}";
         mapper = new ObjectMapper();
         GetCertificadoResponseElement resultado = new GetCertificadoResponseElement();
         respuestaJSON = mapper.writeValueAsString(op);
@@ -122,13 +126,22 @@ public class WSCc {
            } 
         
             generateFile(resultado);
-            return Response.status(Response.Status.OK).entity(respuestaJSON).build();
+            //return Response.status(Response.Status.OK).entity(respuestaJSON).build();
+               File file = new File(FILE_PATH);
+               ResponseBuilder response = Response.ok((Object) file);
+               response.header("Content-Disposition", "attachment; filename=certificado.pdf");
+               return response.build();
             
             
           } catch (IOException exc) {
-                exc.printStackTrace();
-                op.setOpcion(respuestaJSON);
-                return Response.status(Response.Status.BAD_REQUEST).entity(op).build();
+                respuesta.setCodigo("001");
+                respuesta.setDescripcion("Verificar conexion o parametros a servicio de catastro");
+                return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).build();
+          } catch (Exception ex) {
+              
+              respuesta.setCodigo("002");
+              respuesta.setDescripcion("Verificar parametros ingresados");
+              return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).build();
           }
         } 
 
