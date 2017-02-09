@@ -85,7 +85,7 @@ public class WSCc {
     @POST
     @Path("/obtenerCertificado")
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_OCTET_STREAM,MediaType.APPLICATION_JSON})
+    //@Produces({MediaType.APPLICATION_OCTET_STREAM,MediaType.APPLICATION_JSON})
     public Response getCertificados(Opciones op) throws Exception {
       
         ObjectMapper mapper;
@@ -124,20 +124,20 @@ public class WSCc {
 
                 resultado = this.getCertificado(parameters);
            } 
-        
-            generateFile(resultado);
-            //return Response.status(Response.Status.OK).entity(respuestaJSON).build();
-               File file = new File(FILE_PATH);
+           
+            //generateFile(resultado);
+            return Response.status(Response.Status.OK).entity(resultado).build();
+            /*   File file = new File(FILE_PATH);
                ResponseBuilder response = Response.ok((Object) file);
                response.header("Content-Disposition", "attachment; filename=certificado.pdf");
                return response.build();
+            */
             
-            
-          } catch (IOException exc) {
+          /*} catch (IOException exc) {
                 respuesta.setCodigo("001");
                 respuesta.setDescripcion("Verificar conexion o parametros a servicio de catastro");
                 return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).build();
-          } catch (Exception ex) {
+          */} catch (Exception ex) {
               
               respuesta.setCodigo("002");
               respuesta.setDescripcion("Verificar parametros ingresados");
