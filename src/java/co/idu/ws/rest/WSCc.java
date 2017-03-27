@@ -9,10 +9,12 @@ import co.idu.cliente.soap.GetCertificadoElement;
 import co.idu.cliente.soap.GetCertificadoResponseElement;
 import co.idu.modelo.Opciones;
 import co.idu.modelo.Respuesta;
+//import co.idu.modelo.Respuesta;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -26,14 +28,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.glassfish.jersey.server.ResourceConfig;
+
+
+
 
 /**
  * REST Web Service
  *
  * @author jcpazh
  */
-@Path("/catastro")
-public class WSCc {
+//@Path("/catastro")
+@ApplicationPath("/catastro")
+public class WSCc extends ResourceConfig{
 
     @Context
     private UriInfo context; 
@@ -41,11 +48,14 @@ public class WSCc {
     String FILE_PATH = "D:\\SOPORTES\\Certificado\\certificadoc.pdf";       
     FileOutputStream fos;
     Respuesta respuesta = new Respuesta();
+    
 
     /**
      * Creates a new instance of WSCc
      */
     public WSCc() {
+        packages("co.idu.ws.rest");
+        register(CORSResponseFilter.class);
     }
 
     /**
@@ -65,29 +75,18 @@ public class WSCc {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getFile() {
         File file = new File(FILE_PATH);
-        ResponseBuilder response = Response.ok((Object) file);
+            ResponseBuilder response = Response.ok((Object) file);
         response.header("Content-Disposition", "attachment; filename=newfile.pdf");
         return response.build();
 
     }
 
-    /**
-     * PUT method for updating or creating an instance of WSCc
-     *
-     * @param content representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     */
-    @PUT
-    @Consumes("application/json")
-    public void putJson(String content) {
-    }
-
+    
     @POST
     @Path("/obtenerCertificado")
     @Consumes({MediaType.APPLICATION_JSON})
     //@Produces({MediaType.APPLICATION_OCTET_STREAM,MediaType.APPLICATION_JSON})
     public Response getCertificados(Opciones op) throws Exception {
-      
         ObjectMapper mapper;
         String respuestaJSON ="{'error':'faild'}";
         mapper = new ObjectMapper();
@@ -100,7 +99,7 @@ public class WSCc {
              //llamado a ws soap de catastro que envia certificado pdf
                 GetCertificadoElement parameters = new GetCertificadoElement();
                 parameters.setCedulaCatastral(op.getDato());
-                //parameters.setChip("AAA0179HKBR");
+                    //parameters.setChip("AAA0179HKBR");
                 parameters.setChip("");
                 parameters.setClave("8999990816");
                 parameters.setDireccion("");
@@ -126,7 +125,8 @@ public class WSCc {
            } 
            
             //generateFile(resultado);
-            return Response.status(Response.Status.OK).entity(resultado).build();
+            return Response.status(Response.Status.OK).entity(resultado).header("Access-Control-Allow-Origin", "*")
+			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT").build();
             /*   File file = new File(FILE_PATH);
                ResponseBuilder response = Response.ok((Object) file);
                response.header("Content-Disposition", "attachment; filename=certificado.pdf");
@@ -138,23 +138,21 @@ public class WSCc {
                 respuesta.setDescripcion("Verificar conexion o parametros a servicio de catastro");
                 return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).build();
           */} catch (Exception ex) {
-              
+              ex.printStackTrace();
               respuesta.setCodigo("002");
               respuesta.setDescripcion("Verificar parametros ingresados");
-              return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).build();
+              return Response.status(Response.Status.BAD_REQUEST).entity(respuesta).header("Access-Control-Allow-Origin", "*")
+			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT").build();
           }
         } 
 
-    
-
-    private static GetCertificadoResponseElement getCertificado(co.idu.cliente.soap.GetCertificadoElement parameters) {
+     private static GetCertificadoResponseElement getCertificado(co.idu.cliente.soap.GetCertificadoElement parameters) {
         co.idu.cliente.soap.WSCertificadoCatastralCL_Service service = new co.idu.cliente.soap.WSCertificadoCatastralCL_Service();
         co.idu.cliente.soap.WSCertificadoCatastralCL port = service.getWSCertificadoCatastralCLSoapHttpPort();
         return port.getCertificado(parameters);
     }
 
     public void generateFile(GetCertificadoResponseElement r) throws FileNotFoundException, IOException {
-
         System.out.print("Testing..." + r.getResult().getPdfCertificado().toString());
         fos = new FileOutputStream(FILE_PATH);
         fos.write(r.getResult().getPdfCertificado());

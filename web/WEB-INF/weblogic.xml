@@ -5,4 +5,4 @@
     <debug>true</debug>
   </jsp-descriptor>
   <context-root>/WSRestCertificado</context-root>
-</weblogic-web-app>
+ </weblogic-web-app>
